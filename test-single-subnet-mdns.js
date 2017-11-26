@@ -5,9 +5,9 @@ var execspawn = require('npm-execspawn')
 
 test('local network, 2 nodes, dat share and dat clone, mdns', function (t) {
   buildImage(function (err) {
-    if (err) t.end(err)
+    t.error(err)
+    t.end()
   })
-  t.end()
 })
 
 function buildImage (cb) {
