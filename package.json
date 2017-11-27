@@ -8,6 +8,7 @@
   "author": "Jim Pick",
   "license": "BSD-3-Clause",
   "dependencies": {
+    "node-pty": "^0.7.3",
     "npm-execspawn": "^1.3.0",
     "tape": "^4.8.0"
   },

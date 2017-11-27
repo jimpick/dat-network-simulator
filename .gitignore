@@ -1,3 +1,4 @@
 *.img
 node_modules
 Makefile
+*.swp

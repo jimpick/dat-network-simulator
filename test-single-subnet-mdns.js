@@ -1,14 +1,42 @@
 var test = require('tape')
-// var cp = require('child_process')
 var execspawn = require('npm-execspawn')
-// var spawn = require('tape-spawn')
+var mininet = require('./lib/mininet')
 
-test('local network, 2 nodes, dat share and dat clone, mdns', function (t) {
+function setup (cb) {
   buildImage(function (err) {
-    t.error(err)
-    t.end()
+    if (err) fatal(err)
+    console.log('starting mininet')
+    mininet.start(function (err, nodes) {
+      if (err) fatal(err)
+      console.log('mininet started')
+      cb(nodes)
+    })
   })
-})
+}
+
+function tests (nodes, cb) {
+  test.onFinish(teardown(cb))
+
+  test('local network, 2 nodes, dat share and dat clone, mdns', function (t) {
+    console.log('nodes', nodes)
+    console.log('waiting 3 seconds')
+    setTimeout(function () {
+      t.ok(true, 'Bogus test')
+      t.end()
+    }, 3000)
+  })
+}
+
+function teardown (cb) {
+  return function () {
+    console.log('stopping mininet')
+    mininet.stop(function (err) {
+      if (err) fatal(err)
+      console.log('mininet stopped')
+      cb()
+    })
+  }
+}
 
 function buildImage (cb) {
   var mc = execspawn('mkcontainer')
@@ -19,3 +47,14 @@ function buildImage (cb) {
     cb()
   })
 }
+
+function fatal (err) {
+  console.error('Fatal error', err)
+  process.exit(1)
+}
+
+setup(function (nodes) {
+  tests(nodes, function () {
+    console.log('Done.')
+  })
+})
